@@ -60,6 +60,12 @@ function setup() {
   for (let pos of positions) {
     wheels.push(new Wheel(pos.x, pos.y, baseRadius));
   }
+
+  analyser = new p5.Amplitude();    // amplitude analyzer
+  analyser.setInput(song);
+
+  fft = new p5.FFT(0.8, 128);       // frequency analyzer (smoothing, bins)
+  fft.setInput(song);
 }
 
 function draw() {
@@ -69,74 +75,86 @@ function draw() {
 
   // state 0: show intro title, give a background about this game and themes
   if (state === 0) {
-  textSize(22);
-  displayNoisyText(
-    'UNDER THE EVER-ROTATING WHEELS', 
-    width/2, height/2 -22
-    
-  ); 
-
-  textSize(22);
-  displayNoisyText(
-     'HOW DO CHOICES AND THE UNKNOWN INTERTWINE?',
-    width/2, height/2 
-    
-  ); 
-
-  // guidance to next step
-   textSize(12);
-   displayNoisyText(
-    'Click anywhere to continue',
-    width/2, height/2 + 330
-  );
-  return;
-}
-
-// state 1: show instructions, guide user how to play this game
-if (state === 1) {
-  textSize(22);
-  displayNoisyText(
-    'Follow the sound to find your own Lucky Wheel',
-    width/2, height/2 - 20
-  );
-
-  textSize(16);
-  displayNoisyText(
-    'Move your mouse to locate the lively wheel',
-    width/2, height/2 + 20
-  );
-
-  textSize(12);
-  displayNoisyText(
-    'Click anywhere to start',
-    width/2, height/2 + 330
-  );
-  return;
-}
-
-// state 3: show result message, prompt to restart  
- if (state === 3) {
-    textSize(24);
+    textSize(22);
     displayNoisyText(
-           `Congratulations! You found the ${themeNames[themeIndex]} Lucky Wheel!
-           \n${explanations[themeIndex]}`,
-      width / 2, height / 2
+      'UNDER THE EVER-ROTATING WHEELS',
+      width/2, height/2 - 22
+    );
 
+    textSize(22);
+    displayNoisyText(
+      'HOW DO CHOICES AND THE UNKNOWN INTERTWINE?',
+      width/2, height/2
+    );
+
+    // guidance to next step
+    textSize(12);
+    displayNoisyText(
+      'Click anywhere to continue',
+      width/2, height/2 + 330
+    );
+    return;
+  }
+
+  // state 1: show instructions, guide user how to play this game
+  if (state === 1) {
+    textSize(22);
+    displayNoisyText(
+      'Follow the sound to find your own Lucky Wheel',
+      width/2, height/2 - 20
+    );
+
+    textSize(16);
+    displayNoisyText(
+      'Move your mouse to locate the lively wheel',
+      width/2, height/2 + 20
     );
 
     textSize(12);
-     displayNoisyText(
-    'Click anywhere to restart',
-    width/2, height/2 + 330
-  );
-    return;}
+    displayNoisyText(
+      'Click anywhere to start',
+      width/2, height/2 + 330
+    );
+    return;
+  }
+
+  // state 3: show result message, prompt to restart  
+  if (state === 3) {
+    textSize(24);
+    displayNoisyText(
+      `Congratulations! You found the ${themeNames[themeIndex]} Lucky Wheel!\n${explanations[themeIndex]}`,
+      width/2, height/2
+    );
+
+    textSize(12);
+    displayNoisyText(
+      'Click anywhere to restart',
+      width/2, height/2 + 330
+    );
+    return;
+  }
+
+  // state 2: apply audio-driven animation
+  if (state === 2) {
+    let level = analyser.getLevel();
+    let spectrum = fft.analyze();
+    for (let w of wheels) {
+      // drive rotation speed by audio level
+      w.rotationSpeed = w.baseRotationSpeed * map(level, 0, 1, 0.5, 2, true);
+      // drive scale by audio level
+      w.targetRadius = w.baseRadius * (1 + level * 0.3);
+      // drive pink ring alpha by mid-frequency energy
+      let midEnergy = spectrum[30];
+      w.pinkRingColor.setAlpha(map(midEnergy, 0, 255, 50, 255, true));
+    }
+  }
 
   // state 2: game display
   for (let w of wheels) w.update();
   resolveCollisions();
   for (let w of wheels) w.display();
-
 }
+
 
 function mouseMoved() {
    if (state < 2) return;   // Only active during gameplay; ignore if state < 2
