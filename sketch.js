@@ -202,6 +202,9 @@ function togglePlay() {
   else song.loop();
 }
 
+// Only the hovered wheel will use its outer ring to push surrounding wheels
+// This technique (collision-based displacement using target buffers) was not covered in class
+// Adapted from a p5.js community example: https://editor.p5js.org/codingtrain/sketches/CollisionRepulsionExample
 function resolveCollisions() {
   const dotRings    = 6;   // Number of dot rings
   const ringSpacing = 13;  // Spacing between rings
