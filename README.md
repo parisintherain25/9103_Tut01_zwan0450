@@ -78,19 +78,3 @@ This contrasts with peers who animated rotation speed or color dynamically; here
 * Kept original wheel drawing and collision code unchanged.
 
 ---
-
-## External Tools & Techniques
-
-* **p5.js Sound Library** – not covered in class, used for audio playback and mixing.
-* **Creative Coding Examples** – collision logic adapted from a p5.js community sketch (see inline comments for source).
-
----
-
-## Code Comments
-
-* All functions include clear comments.
-* External techniques are marked with `// this technique not covered in class: ...`.
-* Third-party inspiration is cited with a URL in comments.
-
----
-
