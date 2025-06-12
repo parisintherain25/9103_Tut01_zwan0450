@@ -43,7 +43,7 @@ This contrasts with peers who animated rotation speed or color dynamically; here
 
 * **Find the Invisible Cow** – inspired the auditory “hidden target” concept from [https://findtheinvisiblecow.com/]
 * **p5.js `dist()`** – calculates the Euclidean distance between two points for collision and hover detection from [https://p5js.org/reference/p5/dist/](https://p5js.org/reference/p5/dist/)  
-* **Circle–Circle Collision Detection (CodeGuppy)** – step-by-step guide to detect overlap between two circles using p5.js `dist()` from [https://codeguppy.com/blog/how-to-implement-collision-detection-between-two-circles-using-p5.js/index.html](https://codeguppy.com/blog/how-to-implement-collision-detection-between-two-circles-using-p5.js/index.html)
+* **Collision Detection (CodeGuppy)** – step-by-step guide to detect overlap between two circles using p5.js `dist()` from [https://codeguppy.com/blog/how-to-implement-collision-detection-between-two-circles-using-p5.js/index.html](https://codeguppy.com/blog/how-to-implement-collision-detection-between-two-circles-using-p5.js/index.html)
 * **p5.js Sound Library** – `loadSound()`, `setVolume()`, `pan()` from [https://p5js.org/reference/#/p5.SoundFile](https://p5js.org/reference/#/p5.SoundFile).
 
 ---
@@ -94,8 +94,12 @@ This contrasts with peers who animated rotation speed or color dynamically; here
 
 ## Major Code Changes
 
-* Removed visual-only cues; implemented audio-based proximity feedback.
-* Integrated thematic audio tracks.
-* Kept original wheel drawing and collision code unchanged.
+* Added a four-phase state machine with Perlin-noise text jitter for intro, instructions, gameplay, and result screens.
+
+* Integrated `p5.Amplitude()` and `p5.FFT()` to drive wheel rotation speed, size, and ring transparency directly from audio level and frequency content.
+
+* Themed color ranges and unique ambient tracks (Ocean, Desert, Oasis) replace fully random palettes and static sound.
+
+* Simplified user controls—audio now auto-drives visuals; mouse panning remains the only manual input.
 
 ---
