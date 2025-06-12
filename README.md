@@ -1,4 +1,4 @@
-# Find your own Lucky Wheel
+# Find Your Own Lucky Wheel
 * Interaction Method: Audio-Driven Wheel Discovery 
 * Student：Ziyu Wang
 * Unikey：zwan0450
