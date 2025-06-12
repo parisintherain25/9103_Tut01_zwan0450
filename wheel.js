@@ -14,6 +14,7 @@ class Wheel {
     this.targetRadius = baseRadius;
     this.angle = random(360);
     this.rotationSpeed = random(0.2, 1);
+    this.baseRotationSpeed = this.rotationSpeed;    //store original speed
     //Random colors for each part
     this.colors = Array.from({ length: 7 }, () => randomColor());
     //Components of wheels
@@ -38,7 +39,7 @@ class Wheel {
     if (this.isHovered) {
       this.targetRadius = this.baseRadius * 1.5;
     } else {
-      this.targetRadius = this.baseRadius;//Smooth scale
+      this.targetRadius = this.baseRadius;//smooth scale
     }
   
     this.radius = lerp(this.radius, this.targetRadius, 0.3);
@@ -144,13 +145,13 @@ function randomColor() {
         random(20, 170), 
         random(80, 255)  
       );
-    case 1: // Desert: red + orange + yellow + brown palette
+    case 1: // Desert: red + orange +yellow + brown palette
       return color(
         random(80, 255), 
         random(20, 170), 
         random(0, 150)     
       );
-    case 2: // Oasis: yellow-green + pure green + cyan + dark green + gray palette
+    case 2: // Oasis: yellow-green+ pure green+ cyan + dark green + gray palette
       return color(
         random(0,  150),  
         random(80, 255),
@@ -179,7 +180,7 @@ function resolveCollisions() {
         let moveY = dy / dist * overlap * 1.1;
         b.targetX += moveX;
         b.targetY += moveY;
-        
+
         console.log('push', i, j, 'moveX:', moveX, 'moveY:', moveY);
       }
     }
