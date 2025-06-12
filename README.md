@@ -1,6 +1,7 @@
 # Find your own Lucky Wheel
-Interaction Method: Audio-Driven Wheel Discovery 
-Student：Ziyu Wang (zwan0450)
+* Interaction Method: Audio-Driven Wheel Discovery 
+* Student：Ziyu Wang
+* Unikey：zwan0450
 
 ---
 
@@ -58,6 +59,11 @@ This contrasts with peers who animated rotation speed or color dynamically; here
    themeIndex = floor(random(3));
    song = [oceanSound, desertSound, oasisSound][themeIndex];
    song.loop();
+   // Audio analyzers:
+   analyser = new p5.Amplitude();      // tracks overall volume level
+   analyser.setInput(song);
+   fft = new p5.FFT(0.8, 128);        // analyzes frequency spectrum
+   fft.setInput(song);
    ```
 3. **Volume & Pan Mapping** (`mouseMoved`):
 
@@ -67,7 +73,22 @@ This contrasts with peers who animated rotation speed or color dynamically; here
    song.setVolume(vol);
    song.pan(map(mouseX,0,width,-1,1));
    ```
-4. **Lucky Wheel Selection** (`mouseClicked`): picks one wheel index per theme, only that index triggers the result state.
+4. **Audio-Driven Animation** (`draw` during gameplay):
+
+   * **Amplitude for Rotation & Scale:**
+
+     ```js
+     let level = analyser.getLevel();
+     w.rotationSpeed = w.baseRotationSpeed * map(level, 0, 1, 0.5, 2, true);
+     w.targetRadius = w.baseRadius * (1 + level * 0.3);
+     ```
+   * **FFT to Pink Ring Alpha:**
+
+     ```js
+     let midEnergy = fft.analyze()[30];
+     w.pinkRingColor.setAlpha(map(midEnergy, 0, 255, 50, 255, true));
+     ```
+5. **Lucky Wheel Selection** (`mouseClicked`): picks one wheel index per theme, only that index triggers the result state.
 
 ---
 
